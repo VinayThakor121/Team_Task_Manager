@@ -1,6 +1,6 @@
 # Team Task Manager
 
-A production-ready full-stack team collaboration workspace built with **Next.js 15**, **TypeScript**, **Express**, **MongoDB/Mongoose**, **Socket.IO**, and **OpenAI integration**. The application helps teams manage projects, tasks, AI-assisted task breakdowns, and real-time team conversations in one recruiter-ready interface.
+A production-ready full-stack team collaboration workspace built with **Next.js 15**, **JavaScript**, **Express**, **MongoDB/Mongoose**, **Socket.IO**, and **OpenAI integration**. The application helps teams manage projects, tasks, AI-assisted task breakdowns, and real-time team conversations in one recruiter-ready interface.
 
 ## Features
 
@@ -30,7 +30,7 @@ docs/
 
 ### Frontend
 - Next.js 15 App Router
-- React 19 + TypeScript
+- React 19 + JavaScript
 - Tailwind CSS
 - React Hook Form
 - Axios
@@ -38,7 +38,7 @@ docs/
 
 ### Backend
 - Node.js + Express 5
-- TypeScript
+- JavaScript
 - JWT authentication
 - bcrypt password hashing
 - Mongoose + MongoDB
