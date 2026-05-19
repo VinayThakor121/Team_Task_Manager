@@ -52,12 +52,27 @@ export const aiService = {
 
     try {
       const client = new OpenAI({ apiKey: env.openAiApiKey });
-      const response = await client.responses.create({
+      const response = await client.chat.completions.create({
         model: env.openAiModel,
-        input: buildPrompt(title, description),
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a project manager assistant. Return strict JSON with the shape {\"subtasks\": string[]}.",
+          },
+          {
+            role: "user",
+            content: buildPrompt(title, description),
+          },
+        ],
       });
 
-      const parsed = responseSchema.parse(JSON.parse(response.output_text));
+      const content = response.choices[0]?.message.content;
+      if (!content) {
+        throw new Error("OpenAI returned an empty response");
+      }
+      const parsed = responseSchema.parse(JSON.parse(content));
       return parsed;
     } catch (error) {
       console.error("AI generation failed, falling back to deterministic subtasks", error);

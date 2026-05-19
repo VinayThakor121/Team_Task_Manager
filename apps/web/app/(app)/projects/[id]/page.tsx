@@ -6,6 +6,7 @@ import { LoadingState } from "@/components/common/loading-state";
 import { PageHeader } from "@/components/common/page-header";
 import { StatusPill } from "@/components/common/status-pill";
 import { useAuth } from "@/context/auth-context";
+import { TASK_PRIORITIES, TASK_STATUSES } from "@/lib/task-options";
 import { formatDate } from "@/lib/utils";
 import { aiService } from "@/services/ai";
 import { projectService } from "@/services/projects";
@@ -145,12 +146,12 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <select {...register("priority")} className="rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-white outline-none focus:border-violet-400">
-                {['Low', 'Medium', 'High'].map((priority) => (
+                {TASK_PRIORITIES.map((priority) => (
                   <option key={priority} value={priority}>{priority}</option>
                 ))}
               </select>
               <select {...register("status")} className="rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-white outline-none focus:border-violet-400">
-                {['Todo', 'In Progress', 'Completed'].map((status) => (
+                {TASK_STATUSES.map((status) => (
                   <option key={status} value={status}>{status}</option>
                 ))}
               </select>

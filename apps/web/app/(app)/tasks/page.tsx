@@ -5,6 +5,7 @@ import { LoadingState } from "@/components/common/loading-state";
 import { PageHeader } from "@/components/common/page-header";
 import { StatusPill } from "@/components/common/status-pill";
 import { useAuth } from "@/context/auth-context";
+import { TASK_PRIORITIES, TASK_STATUSES } from "@/lib/task-options";
 import { formatDate } from "@/lib/utils";
 import { taskService } from "@/services/tasks";
 import type { Task } from "@/types";
@@ -55,9 +56,9 @@ export default function TasksPage() {
           className="rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-white outline-none focus:border-violet-400"
         >
           <option value="">All statuses</option>
-          <option value="Todo">Todo</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
+          {TASK_STATUSES.map((status) => (
+            <option key={status} value={status}>{status}</option>
+          ))}
         </select>
         <select
           value={filters.priority}
@@ -67,9 +68,9 @@ export default function TasksPage() {
           className="rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-white outline-none focus:border-violet-400"
         >
           <option value="">All priorities</option>
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
+          {TASK_PRIORITIES.map((priority) => (
+            <option key={priority} value={priority}>{priority}</option>
+          ))}
         </select>
         <input
           value={filters.search}
@@ -105,9 +106,9 @@ export default function TasksPage() {
                     onChange={(event) => updateStatus(task, event.target.value as Task["status"])}
                     className="rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-white outline-none focus:border-violet-400"
                   >
-                    <option value="Todo">Todo</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
+                    {TASK_STATUSES.map((status) => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
                   </select>
                   {user?.role === "admin" ? (
                     <button
