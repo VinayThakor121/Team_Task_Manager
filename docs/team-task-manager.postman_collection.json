@@ -1,0 +1,70 @@
+{
+  "info": {
+    "name": "Team Task Manager API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{apiUrl}}/auth/register", "host": ["{{apiUrl}}"], "path": ["auth", "register"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{
+  "name": "Alex Admin",
+  "email": "admin@teamtaskmanager.dev",
+  "password": "Password123!",
+  "role": "admin"
+}"
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{apiUrl}}/auth/login", "host": ["{{apiUrl}}"], "path": ["auth", "login"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{
+  "email": "admin@teamtaskmanager.dev",
+  "password": "Password123!"
+}"
+        }
+      }
+    },
+    {
+      "name": "Dashboard summary",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{apiUrl}}/dashboard/summary", "host": ["{{apiUrl}}"], "path": ["dashboard", "summary"] }
+      }
+    },
+    {
+      "name": "Generate AI subtasks",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": { "raw": "{{apiUrl}}/ai/generate-subtasks", "host": ["{{apiUrl}}"], "path": ["ai", "generate-subtasks"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{
+  "title": "Build authentication system with RBAC",
+  "description": "Implement auth, JWT, and protected routes"
+}"
+        }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "apiUrl", "value": "http://localhost:4000/api" },
+    { "key": "token", "value": "" }
+  ]
+}
