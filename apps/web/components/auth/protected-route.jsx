@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { LoadingState } from "@/components/common/loading-state";
 
-export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+export const ProtectedRoute = ({ children }) => {
   const router = useRouter();
   const { loading, user } = useAuth();
 

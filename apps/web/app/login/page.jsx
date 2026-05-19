@@ -6,11 +6,6 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
-
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
@@ -19,7 +14,7 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
+  } = useForm({
     defaultValues: {
       email: "admin@teamtaskmanager.dev",
       password: "Password123!",

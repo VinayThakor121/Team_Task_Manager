@@ -1,14 +1,4 @@
-export const PageHeader = ({
-  eyebrow,
-  title,
-  description,
-  action,
-}: {
-  eyebrow: string;
-  title: string;
-  description: string;
-  action?: React.ReactNode;
-}) => {
+export const PageHeader = ({ eyebrow, title, description, action }) => {
   return (
     <div className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur lg:flex-row lg:items-end lg:justify-between">
       <div>

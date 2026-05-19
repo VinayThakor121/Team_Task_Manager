@@ -6,7 +6,6 @@ import { PageHeader } from "@/components/common/page-header";
 import { StatusPill } from "@/components/common/status-pill";
 import { dashboardService } from "@/services/dashboard";
 import { formatDate } from "@/lib/utils";
-import type { DashboardSummary } from "@/types";
 
 const metricCards = [
   { key: "totalTasks", label: "Total tasks" },
@@ -14,10 +13,10 @@ const metricCards = [
   { key: "pendingTasks", label: "Pending" },
   { key: "overdueTasks", label: "Overdue" },
   { key: "assignedToMe", label: "Assigned to me" },
-] as const;
+];
 
 export default function DashboardPage() {
-  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

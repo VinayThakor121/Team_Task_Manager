@@ -2,31 +2,20 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { authService } from "@/services/auth";
-import type { AuthResponse, User } from "@/types";
 
-interface AuthContextValue {
-  user: User | null;
-  token: string | null;
-  loading: boolean;
-  login: (payload: { email: string; password: string }) => Promise<AuthResponse>;
-  register: (payload: { name: string; email: string; password: string; role: "admin" | "member" }) => Promise<AuthResponse>;
-  logout: () => void;
-  refreshUser: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+const AuthContext = createContext(undefined);
 
 const TOKEN_KEY = "ttm_token";
 const USER_KEY = "ttm_user";
 
-const persistSession = (response: AuthResponse) => {
+const persistSession = (response) => {
   window.localStorage.setItem(TOKEN_KEY, response.token);
   window.localStorage.setItem(USER_KEY, JSON.stringify(response.user));
 };
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,9 +25,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (savedToken) {
       setToken(savedToken);
     }
-
     if (savedUser) {
-      setUser(JSON.parse(savedUser) as User);
+      setUser(JSON.parse(savedUser));
     }
 
     if (savedToken) {
@@ -66,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     window.localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
   };
 
-  const login = async (payload: { email: string; password: string }) => {
+  const login = async (payload) => {
     const response = await authService.login(payload);
     persistSession(response);
     setToken(response.token);
@@ -74,7 +62,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return response;
   };
 
-  const register = async (payload: { name: string; email: string; password: string; role: "admin" | "member" }) => {
+  const register = async (payload) => {
     const response = await authService.register(payload);
     persistSession(response);
     setToken(response.token);

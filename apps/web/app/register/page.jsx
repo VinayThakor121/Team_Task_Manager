@@ -6,13 +6,6 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 
-interface RegisterFormValues {
-  name: string;
-  email: string;
-  password: string;
-  role: "admin" | "member";
-}
-
 export default function RegisterPage() {
   const router = useRouter();
   const { register: registerUser } = useAuth();
@@ -21,7 +14,7 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterFormValues>({
+  } = useForm({
     defaultValues: {
       role: "member",
     },

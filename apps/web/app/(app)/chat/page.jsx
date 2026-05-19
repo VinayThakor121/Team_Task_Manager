@@ -6,31 +6,30 @@ import { formatDate } from "@/lib/utils";
 import { chatService } from "@/services/chat";
 import { userService } from "@/services/users";
 import { useSocket } from "@/socket/socket-provider";
-import type { Conversation, Message, User } from "@/types";
 import { PageHeader } from "@/components/common/page-header";
 import { LoadingState } from "@/components/common/loading-state";
 
 export default function ChatPage() {
   const { user } = useAuth();
   const { socket, onlineUserIds } = useSocket();
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const [conversations, setConversations] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [users, setUsers] = useState([]);
   const [activeConversationId, setActiveConversationId] = useState("");
   const [messageDraft, setMessageDraft] = useState("");
   const [groupName, setGroupName] = useState("Product Squad");
-  const [groupMembers, setGroupMembers] = useState<string[]>([]);
+  const [groupMembers, setGroupMembers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [typingConversationId, setTypingConversationId] = useState("");
   const [loading, setLoading] = useState(true);
-  const endRef = useRef<HTMLDivElement | null>(null);
+  const endRef = useRef(null);
 
   const activeConversation = useMemo(
     () => conversations.find((conversation) => conversation._id === activeConversationId) ?? null,
     [activeConversationId, conversations],
   );
 
-  const loadConversations = useCallback(async (nextActiveConversationId?: string) => {
+  const loadConversations = useCallback(async (nextActiveConversationId) => {
     const [conversationItems, userItems] = await Promise.all([chatService.listConversations(), userService.search()]);
     setConversations(conversationItems);
     setUsers(userItems.filter((candidate) => candidate.id !== user?.id));
@@ -50,18 +49,18 @@ export default function ChatPage() {
   useEffect(() => {
     if (!socket) return;
 
-    const handleMessage = (message: Message) => {
+    const handleMessage = (message) => {
       if (message.conversationId === activeConversationId) {
         setMessages((current) => [...current, message]);
       }
       void loadConversations(activeConversationId);
     };
 
-    const handleTyping = ({ conversationId }: { conversationId: string }) => {
+    const handleTyping = ({ conversationId }) => {
       setTypingConversationId(conversationId);
     };
 
-    const handleStopTyping = ({ conversationId }: { conversationId: string }) => {
+    const handleStopTyping = ({ conversationId }) => {
       if (typingConversationId === conversationId) {
         setTypingConversationId("");
       }
@@ -90,7 +89,7 @@ export default function ChatPage() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const openConversation = async (conversationId: string) => {
+  const openConversation = async (conversationId) => {
     setActiveConversationId(conversationId);
     const conversationMessages = await chatService.getMessages(conversationId);
     setMessages(conversationMessages);

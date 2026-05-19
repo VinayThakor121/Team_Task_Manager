@@ -6,7 +6,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { useAuth } from "@/context/auth-context";
 import { getInitials } from "@/lib/utils";
 
-export const AppShell = ({ children }: { children: React.ReactNode }) => {
+export const AppShell = ({ children }) => {
   const { user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();

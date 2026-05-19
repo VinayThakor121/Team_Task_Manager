@@ -8,15 +8,14 @@ import { useAuth } from "@/context/auth-context";
 import { TASK_PRIORITIES, TASK_STATUSES } from "@/lib/task-options";
 import { formatDate } from "@/lib/utils";
 import { taskService } from "@/services/tasks";
-import type { Task } from "@/types";
 
 export default function TasksPage() {
   const { user } = useAuth();
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ status: "", priority: "", search: "" });
 
-  const loadTasks = useCallback(async (nextFilters: typeof filters) => {
+  const loadTasks = useCallback(async (nextFilters) => {
     setLoading(true);
     const result = await taskService.list(
       Object.fromEntries(Object.entries(nextFilters).filter(([, value]) => value)),
@@ -29,12 +28,12 @@ export default function TasksPage() {
     loadTasks(filters);
   }, [filters, loadTasks]);
 
-  const updateStatus = async (task: Task, status: Task["status"]) => {
+  const updateStatus = async (task, status) => {
     await taskService.update(task._id, { status });
     await loadTasks(filters);
   };
 
-  const removeTask = async (id: string) => {
+  const removeTask = async (id) => {
     await taskService.remove(id);
     await loadTasks(filters);
   };
@@ -103,7 +102,7 @@ export default function TasksPage() {
                 <div className="flex flex-wrap items-center gap-3">
                   <select
                     value={task.status}
-                    onChange={(event) => updateStatus(task, event.target.value as Task["status"])}
+                    onChange={(event) => updateStatus(task, event.target.value)}
                     className="rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-white outline-none focus:border-violet-400"
                   >
                     {TASK_STATUSES.map((status) => (

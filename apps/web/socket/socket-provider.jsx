@@ -1,23 +1,18 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { io, type Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import { useAuth } from "@/context/auth-context";
 
-interface SocketContextValue {
-  socket: Socket | null;
-  onlineUserIds: string[];
-}
-
-const SocketContext = createContext<SocketContextValue>({
+const SocketContext = createContext({
   socket: null,
   onlineUserIds: [],
 });
 
-export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
+export const SocketProvider = ({ children }) => {
   const { token } = useAuth();
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [onlineUserIds, setOnlineUserIds] = useState<string[]>([]);
+  const [socket, setSocket] = useState(null);
+  const [onlineUserIds, setOnlineUserIds] = useState([]);
 
   useEffect(() => {
     if (!token) {
@@ -30,7 +25,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       auth: { token },
     });
 
-    nextSocket.on("presence:update", (userIds: string[]) => {
+    nextSocket.on("presence:update", (userIds) => {
       setOnlineUserIds(userIds);
     });
 

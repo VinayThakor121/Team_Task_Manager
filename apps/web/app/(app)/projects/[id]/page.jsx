@@ -12,29 +12,15 @@ import { aiService } from "@/services/ai";
 import { projectService } from "@/services/projects";
 import { taskService } from "@/services/tasks";
 import { userService } from "@/services/users";
-import type { Project, Task, User } from "@/types";
 
-interface ProjectDetailPageProps {
-  params: Promise<{ id: string }>;
-}
-
-interface TaskFormValues {
-  title: string;
-  description: string;
-  assignedTo: string;
-  priority: "Low" | "Medium" | "High";
-  status: "Todo" | "In Progress" | "Completed";
-  dueDate: string;
-}
-
-export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
+export default function ProjectDetailPage({ params }) {
   const { user } = useAuth();
   const [projectId, setProjectId] = useState("");
-  const [project, setProject] = useState<Project | null>(null);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [aiSubtasks, setAiSubtasks] = useState<string[]>([]);
-  const [selectedSubtasks, setSelectedSubtasks] = useState<string[]>([]);
+  const [project, setProject] = useState(null);
+  const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [aiSubtasks, setAiSubtasks] = useState([]);
+  const [selectedSubtasks, setSelectedSubtasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [aiLoading, setAiLoading] = useState(false);
   const {
@@ -43,7 +29,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
     watch,
     reset,
     formState: { isSubmitting },
-  } = useForm<TaskFormValues>({
+  } = useForm({
     defaultValues: {
       priority: "Medium",
       status: "Todo",
@@ -53,7 +39,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const watchedTitle = watch("title");
   const watchedDescription = watch("description");
 
-  const loadData = async (id: string) => {
+  const loadData = async (id) => {
     setLoading(true);
     const [{ item, tasks: projectTasks }, userItems] = await Promise.all([projectService.getById(id), userService.search()]);
     setProject(item);
@@ -87,7 +73,6 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
   const onSubmit = handleSubmit(async (values) => {
     if (!projectId) return;
-
     await taskService.create({
       ...values,
       projectId,

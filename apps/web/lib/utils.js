@@ -1,4 +1,4 @@
-export const formatDate = (value?: string | Date | null) => {
+export const formatDate = (value) => {
   if (!value) return "No date";
   return new Date(value).toLocaleDateString(undefined, {
     month: "short",
@@ -7,7 +7,7 @@ export const formatDate = (value?: string | Date | null) => {
   });
 };
 
-export const getInitials = (value: string) =>
+export const getInitials = (value) =>
   value
     .split(" ")
     .map((part) => part[0])

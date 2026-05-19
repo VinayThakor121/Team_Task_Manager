@@ -9,25 +9,18 @@ import { useAuth } from "@/context/auth-context";
 import { formatDate } from "@/lib/utils";
 import { projectService } from "@/services/projects";
 import { userService } from "@/services/users";
-import type { Project, User } from "@/types";
-
-interface ProjectFormValues {
-  title: string;
-  description: string;
-  memberIds: string[];
-}
 
 export default function ProjectsPage() {
   const { user } = useAuth();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const [projects, setProjects] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<ProjectFormValues>({
+  } = useForm({
     defaultValues: { memberIds: [] },
   });
 
