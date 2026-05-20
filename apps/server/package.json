@@ -8,7 +8,7 @@
     "dev": "node --watch src/index.js",
     "build": "echo \"No build step required for JavaScript project\"",
     "start": "node src/index.js",
-    "lint": "echo \"No TypeScript lint - project uses JavaScript\"",
+    "lint": "echo \"No lint step configured for server - project uses JavaScript\"",
     "seed": "node src/data/seed.js"
   },
   "dependencies": {
