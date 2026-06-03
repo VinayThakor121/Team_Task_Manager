@@ -5,9 +5,10 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/projects", label: "Projects" },
-  { href: "/tasks", label: "Tasks" },
-  { href: "/chat", label: "Chat" },
+  { href: "/interview/create", label: "Create Interview" },
+  { href: "/history", label: "History" },
+  { href: "/analytics", label: "Analytics" },
+  { href: "/profile", label: "Profile" },
 ];
 
 export const Sidebar = () => {
@@ -16,9 +17,9 @@ export const Sidebar = () => {
   return (
     <aside className="rounded-3xl border border-white/10 bg-slate-950/70 p-5 shadow-2xl shadow-slate-950/30 backdrop-blur">
       <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-violet-300">Workspace</p>
-        <h2 className="mt-3 text-2xl font-semibold text-white">Team Task Manager</h2>
-        <p className="mt-2 text-sm text-slate-400">Projects, tasks, AI planning, and real-time team chat.</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-violet-300">Interview Prep</p>
+        <h2 className="mt-3 text-2xl font-semibold text-white">Prepwise Flask</h2>
+        <p className="mt-2 text-sm text-slate-400">AI mock interviews, analytics, transcript feedback, and leaderboard.</p>
       </div>
       <nav className="space-y-2">
         {links.map((link) => {

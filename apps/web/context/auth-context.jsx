@@ -22,16 +22,12 @@ export const AuthProvider = ({ children }) => {
     const savedToken = window.localStorage.getItem(TOKEN_KEY);
     const savedUser = window.localStorage.getItem(USER_KEY);
 
-    if (savedToken) {
-      setToken(savedToken);
-    }
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    if (savedToken) setToken(savedToken);
+    if (savedUser) setUser(JSON.parse(savedUser));
 
     if (savedToken) {
       authService
-        .me()
+        .profile()
         .then((currentUser) => {
           setUser(currentUser);
           window.localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
@@ -49,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const refreshUser = async () => {
-    const currentUser = await authService.me();
+    const currentUser = await authService.profile();
     setUser(currentUser);
     window.localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
   };
@@ -62,8 +58,8 @@ export const AuthProvider = ({ children }) => {
     return response;
   };
 
-  const register = async (payload) => {
-    const response = await authService.register(payload);
+  const signup = async (payload) => {
+    const response = await authService.signup(payload);
     persistSession(response);
     setToken(response.token);
     setUser(response.user);
@@ -78,7 +74,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const value = useMemo(
-    () => ({ user, token, loading, login, register, logout, refreshUser }),
+    () => ({ user, token, loading, login, signup, logout, refreshUser }),
     [user, token, loading],
   );
 
@@ -87,8 +83,6 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
