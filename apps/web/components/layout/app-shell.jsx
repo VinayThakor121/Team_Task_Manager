@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { useAuth } from "@/context/auth-context";
 import { getInitials } from "@/lib/utils";
@@ -17,20 +16,17 @@ export const AppShell = ({ children }) => {
       <div className="space-y-6">
         <header className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-slate-950/20 backdrop-blur md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-emerald-300">Realtime collaboration</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-emerald-300">AI Interview Platform</p>
             <h1 className="mt-2 text-xl font-semibold text-white">{pathname.replace("/", "") || "dashboard"}</h1>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/" className="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-200 hover:bg-white/10">
-              Landing
-            </Link>
             <div className="flex items-center gap-3 rounded-full border border-white/10 bg-slate-950/70 px-3 py-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500 font-semibold text-white">
-                {user ? getInitials(user.name) : "TM"}
+                {user ? getInitials(user.name) : "PW"}
               </div>
               <div>
                 <p className="text-sm font-medium text-white">{user?.name}</p>
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{user?.role}</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{user?.email}</p>
               </div>
               <button
                 type="button"

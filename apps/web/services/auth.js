@@ -1,16 +1,26 @@
 import { api } from "@/lib/api";
 
+const unwrap = (response) => response?.data;
+
 export const authService = {
   async login(payload) {
     const { data } = await api.post("/auth/login", payload);
-    return data;
+    return unwrap(data);
   },
-  async register(payload) {
-    const { data } = await api.post("/auth/register", payload);
-    return data;
+  async signup(payload) {
+    const { data } = await api.post("/auth/signup", payload);
+    return unwrap(data);
   },
-  async me() {
-    const { data } = await api.get("/auth/me");
-    return data.user;
+  async profile() {
+    const { data } = await api.get("/auth/profile");
+    return unwrap(data);
+  },
+  async updateProfile(payload) {
+    const { data } = await api.put("/auth/profile", payload);
+    return unwrap(data);
+  },
+  async changePassword(payload) {
+    const { data } = await api.post("/auth/change-password", payload);
+    return unwrap(data);
   },
 };
