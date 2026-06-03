@@ -1,198 +1,105 @@
 # Team Task Manager
 
-A production-ready full-stack team collaboration workspace built with **Next.js 15**, **JavaScript**, **Express**, **MongoDB/Mongoose**, **Socket.IO**, and **OpenAI integration**. The application helps teams manage projects, tasks, AI-assisted task breakdowns, and real-time team conversations in one recruiter-ready interface.
+An AI-powered interview preparation platform with a modern Next.js frontend and a Flask backend API. It helps users create mock interviews, run voice-based sessions, and review AI-generated feedback and analytics.
 
-## Features
-
-- JWT authentication with bcrypt password hashing
-- Role-based access control for **Admin** and **Member** users
-- Project creation, membership management, and task assignment
-- Task filtering, overdue tracking, and dashboard analytics
-- AI-powered task breakdown endpoint at `POST /api/ai/generate-subtasks`
-- Real-time personal and group chat with unread counts and presence updates
-- Responsive, modern dashboard and collaboration UI
-- Railway-ready frontend and backend deployment configuration
-- Seed script for demo accounts and starter data
-
-## Monorepo structure
+## Project Structure
 
 ```text
 apps/
-  server/   Express + MongoDB + Socket.IO API
-  web/      Next.js 15 App Router frontend
-
-docs/
-  api.md
-  team-task-manager.postman_collection.json
+  web/        Next.js frontend
+backend/      Flask backend API
 ```
 
-## Tech stack
+## Tech Stack
 
-### Frontend
-- Next.js 15 App Router
-- React 19 + JavaScript
-- Tailwind CSS
+### Frontend (`apps/web`)
+- Next.js 15
+- React 19
+- Tailwind CSS 4
 - React Hook Form
 - Axios
-- Context API + Socket.IO client
+- Vapi Web SDK
 
-### Backend
-- Node.js + Express 5
-- JavaScript
-- JWT authentication
-- bcrypt password hashing
-- Mongoose + MongoDB
-- Socket.IO
-- OpenAI integration with structured fallback handling
+### Backend (`backend`)
+- Python 3
+- Flask + Flask-RESTful
+- PyMongo (MongoDB)
+- JWT authentication (PyJWT)
+- Flask-Bcrypt
+- Google Gemini API
+- PyPDF2
 
-## Quick start
+## Environment Setup
 
-### 1. Install dependencies
+### 1) Frontend `.env.local`
 
-```bash
-npm --prefix apps/server install
-npm --prefix apps/web install
-```
-
-### 2. Configure environment variables
-
-Copy the sample files:
+Create file:
 
 ```bash
-cp apps/server/.env.example apps/server/.env
 cp apps/web/.env.local.example apps/web/.env.local
 ```
 
-### 3. Start the backend
+Set values in `apps/web/.env.local`:
+
+- `NEXT_PUBLIC_API_URL=http://localhost:5000/api`
+- `NEXT_PUBLIC_VAPI_WEB_TOKEN=your_vapi_web_token`
+- `NEXT_PUBLIC_VAPI_WORKFLOW_ID=your_vapi_workflow_id`
+- `NEXT_PUBLIC_VAPI_VOICE_PROVIDER=11labs`
+- `NEXT_PUBLIC_VAPI_VOICE_ID=your_voice_id`
+
+### 2) Backend `.env`
+
+Create file:
 
 ```bash
-npm --prefix apps/server run dev
+cp backend/.env.example backend/.env
 ```
 
-> If `MONGODB_URI` is not supplied locally, the backend automatically falls back to an in-memory MongoDB instance for development/demo usage.
+Set values in `backend/.env`:
 
-### 4. Start the frontend
+- `APP_ENV=development`
+- `APP_DEBUG=true`
+- `PORT=5000`
+- `CLIENT_ORIGIN=http://localhost:3000`
+- `MONGODB_URI=your_mongodb_connection_string`
+- `MONGODB_DB_NAME=prepwise_clone`
+- `JWT_SECRET=your_jwt_secret`
+- `JWT_EXPIRES_IN_MINUTES=1440`
+- `GEMINI_API_KEY=your_gemini_api_key`
+- `GEMINI_MODEL=gemini-1.5-flash`
+- `VAPI_WEB_TOKEN=your_vapi_web_token`
+- `VAPI_WORKFLOW_ID=your_vapi_workflow_id`
+- `MAX_CONTENT_LENGTH=10485760`
+- `UPLOAD_DIR=backend/uploads`
+
+## Run Locally
+
+### 1) Install frontend dependencies
+
+```bash
+npm --prefix apps/web install
+```
+
+### 2) Install backend dependencies
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r backend/requirements.txt
+```
+
+### 3) Start backend
+
+```bash
+python backend/app.py
+```
+
+Backend API runs at: `http://localhost:5000`
+
+### 4) Start frontend (new terminal)
 
 ```bash
 npm --prefix apps/web run dev
 ```
 
-Frontend: `http://localhost:3000`  
-Backend API: `http://localhost:4000/api`
-
-## Demo credentials
-
-After running the seed script (`npm --prefix apps/server run seed`):
-
-- **Admin**: `admin@teamtaskmanager.dev` / `Password123!`
-- **Member**: `member@teamtaskmanager.dev` / `Password123!`
-
-## Available scripts
-
-### Root
-- `npm run dev:web`
-- `npm run dev:server`
-- `npm run lint`
-- `npm run build`
-
-### Backend
-- `npm --prefix apps/server run dev`
-- `npm --prefix apps/server run lint`
-- `npm --prefix apps/server run build`
-- `npm --prefix apps/server run seed`
-
-### Frontend
-- `npm --prefix apps/web run dev`
-- `npm --prefix apps/web run lint`
-- `npm --prefix apps/web run build`
-
-## Environment variables
-
-### Backend (`apps/server/.env`)
-
-| Variable | Description |
-| --- | --- |
-| `PORT` | API port, defaults to `4000` |
-| `CLIENT_URL` | Frontend origin used for CORS |
-| `MONGODB_URI` | MongoDB Atlas/local connection string |
-| `JWT_SECRET` | JWT signing secret |
-| `JWT_EXPIRES_IN` | Token TTL, defaults to `7d` |
-| `OPENAI_API_KEY` | Optional API key for AI subtasks |
-| `OPENAI_MODEL` | Optional model override |
-
-### Frontend (`apps/web/.env.local`)
-
-| Variable | Description |
-| --- | --- |
-| `NEXT_PUBLIC_API_URL` | Base API URL including `/api` |
-
-## Core API routes
-
-### Auth
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/auth/me`
-
-### Users
-- `GET /api/users?search=`
-
-### Projects
-- `GET /api/projects`
-- `POST /api/projects`
-- `GET /api/projects/:id`
-- `PATCH /api/projects/:id/members`
-
-### Tasks
-- `GET /api/tasks`
-- `POST /api/tasks`
-- `PATCH /api/tasks/:id`
-- `DELETE /api/tasks/:id`
-
-### Dashboard
-- `GET /api/dashboard/summary`
-
-### AI
-- `POST /api/ai/generate-subtasks`
-
-### Chat
-- `GET /api/chat`
-- `POST /api/chat`
-- `POST /api/chat/group`
-- `PATCH /api/chat/group/:id`
-- `PATCH /api/chat/group/:id/members`
-- `DELETE /api/chat/group/:id`
-- `POST /api/message`
-- `GET /api/message/:conversationId`
-
-Full API examples live in [`docs/api.md`](docs/api.md) and [`docs/team-task-manager.postman_collection.json`](docs/team-task-manager.postman_collection.json).
-
-## Seed data
-
-Run:
-
-```bash
-npm --prefix apps/server run seed
-```
-
-The script creates:
-- an admin user
-- a member user
-- a starter project
-- seeded tasks
-- a direct conversation with example messages
-
-## Railway deployment
-
-Deploy frontend and backend as separate Railway services from the same repository:
-
-1. Create a **backend** service with root directory `apps/server` and use `apps/server/railway.json`.
-2. Create a **frontend** service with root directory `apps/web` and use `apps/web/railway.json`.
-3. Provision MongoDB Atlas and configure the backend variables.
-4. Set `NEXT_PUBLIC_API_URL` on the frontend to the public backend URL plus `/api`.
-5. Set the backend `CLIENT_URL` to the public frontend URL.
-
-Detailed steps are available in [`docs/api.md`](docs/api.md#railway-deployment-guide).
-
-## Screenshots
-
-Screenshots captured during verification can be stored in `docs/screenshots/` and linked here for portfolio/demo usage.
+Frontend runs at: `http://localhost:3000`
