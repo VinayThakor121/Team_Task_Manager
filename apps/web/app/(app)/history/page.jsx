@@ -12,7 +12,9 @@ export default function HistoryPage() {
   const { data, loading, error, run } = useApiState([]);
 
   useEffect(() => {
-    run(() => interviewService.list()).catch(() => {});
+    run(() => interviewService.list()).catch((err) => {
+      console.error(err);
+    });
   }, [run]);
 
   if (loading) return <LoadingState label="Loading interview history..." />;

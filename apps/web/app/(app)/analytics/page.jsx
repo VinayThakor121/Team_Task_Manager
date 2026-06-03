@@ -9,11 +9,17 @@ import { analyticsService } from "@/services/analytics";
 export default function AnalyticsPage() {
   const performanceState = useApiState();
   const leaderboardState = useApiState([]);
+  const { run: runPerformance } = performanceState;
+  const { run: runLeaderboard } = leaderboardState;
 
   useEffect(() => {
-    performanceState.run(() => analyticsService.performance()).catch(() => {});
-    leaderboardState.run(() => analyticsService.leaderboard()).catch(() => {});
-  }, []);
+    runPerformance(() => analyticsService.performance()).catch((err) => {
+      console.error(err);
+    });
+    runLeaderboard(() => analyticsService.leaderboard()).catch((err) => {
+      console.error(err);
+    });
+  }, [runLeaderboard, runPerformance]);
 
   if (performanceState.loading) return <LoadingState label="Loading analytics..." />;
 

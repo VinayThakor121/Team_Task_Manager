@@ -5,8 +5,8 @@ import { authService } from "@/services/auth";
 
 const AuthContext = createContext(undefined);
 
-const TOKEN_KEY = "ttm_token";
-const USER_KEY = "ttm_user";
+const TOKEN_KEY = "prepwise_token";
+const USER_KEY = "prepwise_user";
 
 const persistSession = (response) => {
   window.localStorage.setItem(TOKEN_KEY, response.token);

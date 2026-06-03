@@ -30,7 +30,9 @@ export default function CreateInterviewPage() {
   });
 
   useEffect(() => {
-    resumeService.list().then(setResumes).catch(() => {});
+    resumeService.list().then(setResumes).catch((err) => {
+      console.error(err);
+    });
   }, []);
 
   const onUploadResume = async (event) => {

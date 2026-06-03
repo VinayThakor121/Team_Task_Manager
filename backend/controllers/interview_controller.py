@@ -19,6 +19,9 @@ interview_bp = Blueprint("interviews", __name__)
 @jwt_required
 def create_interview_handler():
     payload = request.get_json(silent=True) or {}
+    payload["techStack"] = ",".join(
+        [item.strip() for item in str(payload.get("techStack", "")).split(",") if item.strip()]
+    )
 
     resume_context = ""
     resume_id = payload.get("resumeId")

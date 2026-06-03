@@ -1,4 +1,5 @@
 from functools import wraps
+import logging
 from flask import request, g
 import jwt
 from bson import ObjectId
@@ -29,7 +30,11 @@ def jwt_required(fn):
             return fn(*args, **kwargs)
         except jwt.ExpiredSignatureError:
             return {"success": False, "message": "Token expired"}, 401
-        except Exception:
+        except jwt.InvalidTokenError as error:
+            logging.warning("JWT validation failed: %s", error)
+            return {"success": False, "message": "Invalid token"}, 401
+        except Exception as error:
+            logging.exception("Unexpected auth middleware error: %s", error)
             return {"success": False, "message": "Invalid token"}, 401
 
     return wrapper

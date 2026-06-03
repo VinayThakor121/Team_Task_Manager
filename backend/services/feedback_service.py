@@ -6,6 +6,13 @@ from services.ai_service import generate_feedback_from_transcript
 from utils.serialization import serialize_document
 
 
+def _safe_score(value):
+    try:
+        return round(float(value))
+    except (TypeError, ValueError):
+        return 0
+
+
 def generate_feedback(user_id, interview_id, session_id=None):
     db = get_db()
     interview = db.interviews.find_one({"_id": ObjectId(interview_id), "userId": str(user_id)})
@@ -23,10 +30,10 @@ def generate_feedback(user_id, interview_id, session_id=None):
     feedback = {
         "userId": str(user_id),
         "interviewId": interview_id,
-        "overallScore": int(scores.get("overallScore", 0)),
-        "technicalScore": int(scores.get("technicalScore", 0)),
-        "communicationScore": int(scores.get("communicationScore", 0)),
-        "confidenceScore": int(scores.get("confidenceScore", 0)),
+        "overallScore": _safe_score(scores.get("overallScore", 0)),
+        "technicalScore": _safe_score(scores.get("technicalScore", 0)),
+        "communicationScore": _safe_score(scores.get("communicationScore", 0)),
+        "confidenceScore": _safe_score(scores.get("confidenceScore", 0)),
         "strengths": scores.get("strengths", []),
         "weaknesses": scores.get("weaknesses", []),
         "suggestions": scores.get("suggestions", []),

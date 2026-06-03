@@ -12,7 +12,7 @@ class Config:
     MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
     MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME", "prepwise_clone")
 
-    JWT_SECRET = os.getenv("JWT_SECRET", "change-me")
+    JWT_SECRET = os.getenv("JWT_SECRET", "")
     JWT_EXPIRES_IN_MINUTES = int(os.getenv("JWT_EXPIRES_IN_MINUTES", "1440"))
 
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
@@ -25,3 +25,7 @@ class Config:
 
     MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", str(10 * 1024 * 1024)))
     UPLOAD_DIR = os.getenv("UPLOAD_DIR", "backend/uploads")
+
+
+if not Config.JWT_SECRET:
+    raise RuntimeError("JWT_SECRET must be set in backend/.env")

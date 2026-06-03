@@ -13,7 +13,9 @@ export default function InterviewDetailsPage() {
   const { data, loading, error, run } = useApiState();
 
   useEffect(() => {
-    if (params?.id) run(() => interviewService.getById(params.id)).catch(() => {});
+    if (params?.id) run(() => interviewService.getById(params.id)).catch((err) => {
+      console.error(err);
+    });
   }, [params?.id, run]);
 
   if (loading) return <LoadingState label="Loading interview details..." />;

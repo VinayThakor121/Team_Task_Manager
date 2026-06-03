@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 
-const unwrap = (response) => response?.data?.data;
+const unwrap = (response) => response?.data;
 
 export const sessionService = {
   async start(payload) {

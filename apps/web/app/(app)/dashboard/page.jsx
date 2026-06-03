@@ -12,7 +12,9 @@ export default function DashboardPage() {
   const { data, loading, error, run } = useApiState();
 
   useEffect(() => {
-    run(() => analyticsService.dashboard()).catch(() => {});
+    run(() => analyticsService.dashboard()).catch((err) => {
+      console.error(err);
+    });
   }, [run]);
 
   if (loading) return <LoadingState label="Loading dashboard..." />;

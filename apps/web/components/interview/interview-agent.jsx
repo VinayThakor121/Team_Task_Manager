@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getVapi } from "@/lib/vapi";
 
 export const InterviewAgent = ({
@@ -9,8 +9,11 @@ export const InterviewAgent = ({
   disabled,
   workflowId,
 }) => {
+  const voiceProvider = process.env.NEXT_PUBLIC_VAPI_VOICE_PROVIDER || "11labs";
+  const voiceId = process.env.NEXT_PUBLIC_VAPI_VOICE_ID || "sarah";
   const [status, setStatus] = useState("idle");
   const [transcript, setTranscript] = useState([]);
+  const transcriptRef = useRef([]);
 
   const formattedQuestions = useMemo(
     () => questions.map((question) => `- ${question}`).join("\n"),
@@ -23,14 +26,18 @@ export const InterviewAgent = ({
     const onCallStart = () => setStatus("active");
     const onCallEnd = () => {
       setStatus("ended");
-      onComplete(transcript);
+      onComplete(transcriptRef.current);
     };
     const onMessage = (message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
-        setTranscript((current) => [
-          ...current,
-          { speaker: message.role === "assistant" ? "interviewer" : "candidate", text: message.transcript },
-        ]);
+        setTranscript((current) => {
+          const next = [
+            ...current,
+            { speaker: message.role === "assistant" ? "interviewer" : "candidate", text: message.transcript },
+          ];
+          transcriptRef.current = next;
+          return next;
+        });
       }
     };
 
@@ -43,7 +50,7 @@ export const InterviewAgent = ({
       vapi.off("call-end", onCallEnd);
       vapi.off("message", onMessage);
     };
-  }, [onComplete, transcript]);
+  }, [onComplete]);
 
   const start = async () => {
     setStatus("connecting");
@@ -70,7 +77,7 @@ export const InterviewAgent = ({
         ],
       },
       transcriber: { provider: "deepgram", model: "nova-2", language: "en" },
-      voice: { provider: "11labs", voiceId: "sarah" },
+      voice: { provider: voiceProvider, voiceId },
     });
   };
 
@@ -78,7 +85,7 @@ export const InterviewAgent = ({
     const vapi = getVapi();
     vapi.stop();
     setStatus("ended");
-    onComplete(transcript);
+    onComplete(transcriptRef.current);
   };
 
   return (

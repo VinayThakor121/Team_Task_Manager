@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import datetime, timezone
 
@@ -11,6 +12,7 @@ from utils.serialization import serialize_document
 
 
 ALLOWED_EXTENSIONS = {"pdf"}
+MAX_RESUME_SUMMARY_LENGTH = 5000
 
 
 def _allowed_file(filename):
@@ -30,6 +32,9 @@ def upload_resume(user_id, file_storage):
     file_storage.save(destination)
 
     summary = extract_resume_text(destination)
+    was_truncated = len(summary) > MAX_RESUME_SUMMARY_LENGTH
+    if was_truncated:
+        logging.warning("Resume summary truncated for user %s file %s", user_id, filename)
 
     payload = {
         "userId": str(user_id),
@@ -37,7 +42,8 @@ def upload_resume(user_id, file_storage):
         "storedPath": destination,
         "size": os.path.getsize(destination),
         "uploadedAt": datetime.now(timezone.utc).isoformat(),
-        "textSummary": summary[:5000],
+        "textSummary": summary[:MAX_RESUME_SUMMARY_LENGTH],
+        "summaryTruncated": was_truncated,
     }
 
     result = get_db().resumes.insert_one(payload)
@@ -50,7 +56,8 @@ def extract_resume_text(path):
         reader = PdfReader(path)
         pages = [page.extract_text() or "" for page in reader.pages]
         return "\n".join(pages).strip()
-    except Exception:
+    except Exception as error:
+        logging.exception("Failed to parse resume PDF: %s", error)
         return ""
 
 

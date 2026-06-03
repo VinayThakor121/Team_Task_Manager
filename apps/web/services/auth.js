@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 
-const unwrap = (response) => response?.data?.data;
+const unwrap = (response) => response?.data;
 
 export const authService = {
   async login(payload) {

@@ -12,12 +12,15 @@ def get_dashboard_data(user_id):
     feedbacks = [serialize_document(item) for item in db.feedback.find({"userId": str(user_id)}).sort("createdAt", -1)]
 
     recent = interviews[:5]
+    average_score = 0
+    if feedbacks:
+        total_score = sum(item.get("overallScore", 0) for item in feedbacks)
+        average_score = round(total_score / len(feedbacks), 2)
+
     stats = {
         "interviewsCreated": len(interviews),
         "interviewsCompleted": len(feedbacks),
-        "averageScore": round(sum(item.get("overallScore", 0) for item in feedbacks) / len(feedbacks), 2)
-        if feedbacks
-        else 0,
+        "averageScore": average_score,
     }
 
     return {
@@ -94,6 +97,8 @@ def get_leaderboard(limit=20):
 
 def _growth(score_trend):
     if len(score_trend) < 2:
+        return 0
+    if not score_trend or score_trend[-1] is None:
         return 0
     first = score_trend[0].get("overall", 0)
     last = score_trend[-1].get("overall", 0)

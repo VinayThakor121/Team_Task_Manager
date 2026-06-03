@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = window.localStorage.getItem("ttm_token");
+    const token = window.localStorage.getItem("prepwise_token");
     router.replace(token ? "/dashboard" : "/login");
   }, [router]);
 

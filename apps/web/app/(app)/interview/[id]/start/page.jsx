@@ -16,11 +16,22 @@ export default function StartInterviewPage() {
   const [interview, setInterview] = useState(null);
   const [sessionInfo, setSessionInfo] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
+  const [startedAt, setStartedAt] = useState(null);
 
   useEffect(() => {
     if (!params?.id) return;
-    interviewService.getById(params.id).then(setInterview).catch(() => {});
-    sessionService.start({ interviewId: params.id }).then(setSessionInfo).catch(() => {});
+    interviewService.getById(params.id).then(setInterview).catch((err) => {
+      console.error(err);
+    });
+    sessionService
+      .start({ interviewId: params.id })
+      .then((session) => {
+        setSessionInfo(session);
+        setStartedAt(Date.now());
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, [params?.id]);
 
   const workflowId = useMemo(() => {
@@ -34,7 +45,7 @@ export default function StartInterviewPage() {
       await sessionService.end({
         sessionId: sessionInfo?._id,
         transcript,
-        duration: transcript.length * 15,
+        duration: startedAt ? Math.max(1, Math.round((Date.now() - startedAt) / 1000)) : 0,
         status: "completed",
       });
       await feedbackService.generate({ interviewId: params.id, sessionId: sessionInfo?._id });
